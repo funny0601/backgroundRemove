@@ -2,7 +2,10 @@ import cv2
 import numpy as np
 import imutils
 
-cap = cv2.VideoCapture('./resource/friend_video_Trim.mp4') # 비디오 객체 cap 생성
+background = cv2.imread('./resource/restaurant.jpg')
+background = cv2.resize(background, dsize=(360, 240))
+cap = cv2.VideoCapture('./resource/friend_video_Trim.mp4')
+
 
 if (not cap.isOpened()):
     print('Error opening Video')
@@ -11,8 +14,49 @@ while True:
     retval, frame = cap.read()
     if not retval:
         break
-    frame = imutils.resize(frame, width=320, height=240)
-    cv2.imshow('frame', frame)
+
+    frame = cv2.resize(frame, dsize=(360, 240))
+
+    frame_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    ret, thresh = cv2.threshold(frame_gray, 127, 255, 0)
+
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    max_area = 0
+    max_cnt = None
+
+    mask = np.tile(np.uint8(0), (240, 360, 3)) # black
+    color = [255, 255, 255] # white
+
+    for idx, cnt in enumerate(contours):
+        area = cv2.contourArea(cnt)
+        perimeter = cv2.arcLength(cnt, True)
+
+        if area >= max_area:
+            max_area = area # 제일 영역이 넓은 윤곽선 찾기
+            max_cnt = cnt
+
+    cv2.fillPoly(mask, [max_cnt], color) # mask_inv 역할
+    ret, mask_inv = cv2.threshold(mask,127, 255, cv2.THRESH_BINARY_INV )
+
+    cv2.imshow("mask_inv", mask_inv)
+    frame_only_face = cv2.bitwise_or(frame, mask)  # 흰 배경에 얼굴
+
+    background_1 = cv2.bitwise_and(background, mask)
+    background_2 = cv2.bitwise_and(mask_inv,frame_only_face)
+
+    dst =cv2.add(background_1, background_2)
+    cv2.imshow("dst", dst)
+
+    #cv2.imshow("background", background)
+    #cv2.imshow("background_1", background_1)
+    #cv2.imshow("background_2", background_2)
+
+    #cv2.drawContours(frame, [max_cnt], -1, (0, 255, 0), 1)
+
+    #cv2.imshow('mask', mask) # 흰 배경에 검정 사람
+    #cv2.imshow('frame_only_face', frame_only_face)
 
     key = cv2.waitKey(25)
     if key==27:
