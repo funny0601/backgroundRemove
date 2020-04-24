@@ -8,7 +8,7 @@
 3. cmd 창에서 ```pip install -r requirements.txt``` 
 
 4. inputVideo 폴더에 영상 모두 업로드 </br>
-영상 파일명 예시: p3_u2_a2_1_k -> script db 안의 script_id 형식임)
+영상 파일명 예시: p3_u2_a2_1_k -> script db 안의 script_id 형식
 
 5. 배경과 영상 합성</br>
 cmd 창에서 영상 합성되는 과정까지 보고 싶으면 ```python separate.py --preview yes``` 실행</br>
