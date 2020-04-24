@@ -1,5 +1,6 @@
 # 배경 제거 및 합성 
 
+
 1. Clone or download -> Download ZIP
 
 2. zip 파일 압축 해제 후 backgroundRemove 폴더 위치에서 cmd 창 실행
@@ -17,3 +18,4 @@ cmd 창에서 영상 합성되는 과정까지 보고 싶으면 ```python separa
 preview 창 뜰 때 esc누르면 영상 플레이된 곳까지만 배경 합성되고 다음 동영상으로 넘어가니까 주의!)</em>
 
 6. outputVideo에 원본 동영상 이름 그대로 배경 합성된 채로 저장
+
